@@ -1,21 +1,17 @@
 import { Logger } from "@nestjs/common";
 import { MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
-import { Server, Socket } from 'socket.io';
+import { Server, Socket } from 'ws';
 import { RecieveChatRequestDto } from "./dto/request";
 
 @WebSocketGateway()
 export class AppGateway implements OnGatewayConnection {
     private logger = new Logger(AppGateway.name);
-    
+
     @WebSocketServer()
-    private readonly server: Server;
+    private server: Server;
 
-    public handleConnection(client: Socket) {
-        this.logger.verbose('On Connection by IP:', client.handshake.address);
-    }
-
-    handleDisconnect(client: Socket) {
-        this.logger.verbose('On Connection by IP:', client.handshake.address);
+    public handleConnection(client: Socket){
+        this.logger.verbose(`Connection by : ${client.id}`)
     }
 
     @SubscribeMessage('CHAT_TO_SERVER')

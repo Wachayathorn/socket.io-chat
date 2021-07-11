@@ -1,20 +1,29 @@
 import { Logger } from "@nestjs/common";
 import { MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
-import { Server, Socket } from 'ws';
+import { Server, Socket } from 'socket.io';
 import { RecieveChatRequestDto } from "./dto/request";
 
-@WebSocketGateway()
+@WebSocketGateway({
+    transports: ['websocket',
+        'flashsocket',
+        'htmlfile',
+        'xhr-polling',
+        'jsonp-polling',
+        'polling'],
+    pingTimeout: 60000,
+    pingInterval: 25000
+})
 export class AppGateway implements OnGatewayConnection {
     private logger = new Logger(AppGateway.name);
 
     @WebSocketServer()
-    private server: Server;
+    server: Server;
 
     public handleConnection(client: Socket){
         this.logger.verbose(`Connection by : ${client.id}`);
     }
 
-    public resToClient() : void{
+    public resToClient(){
         this.server.emit('SEND_FROM_SERVER', 'Init Success');
     }
 

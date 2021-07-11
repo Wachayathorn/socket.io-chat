@@ -11,11 +11,16 @@ export class AppGateway implements OnGatewayConnection {
     private server: Server;
 
     public handleConnection(client: Socket){
-        this.logger.verbose(`Connection by : ${client.id}`)
+        this.logger.verbose(`Connection by : ${client.id}`);
+    }
+
+    public resToClient() : void{
+        this.server.emit('SEND_FROM_SERVER', 'Init Success');
     }
 
     @SubscribeMessage('CHAT_TO_SERVER')
     recieveChat(@MessageBody() data: RecieveChatRequestDto): void {
+        this.logger.verbose(`Room ID  : ${data.roomId}`);
         this.server.emit('CHAT_TO_ROOM_ID#' + data.roomId, data);
     }
 }

@@ -19,12 +19,8 @@ export class AppGateway implements OnGatewayConnection {
     @WebSocketServer()
     server: Server;
 
-    public handleConnection(client: Socket){
+    public handleConnection(client: Socket) {
         this.logger.verbose(`Connection by : ${client.id}`);
-    }
-
-    public resToClient(){
-        this.server.emit('SEND_FROM_SERVER', 'Init Success');
     }
 
     @SubscribeMessage('CHAT_TO_SERVER')
